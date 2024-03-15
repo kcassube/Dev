@@ -6,18 +6,25 @@
 <br>
 <body>
 <div class="container">
-    <div class="statistics" style="background-color: #f0f0f0;">
-      <h2>Total apartment real vacancies</h2>
+  
+    
+    <div class="statistics" style="background-color: #f0f0f0; height: 800px;">
+      <form><h2>Total apartment real vacancies</h2>
       <p>{{ statisticsData?.bpi.EUR.rate }} €</p> 
+    </form>
     </div>
-    <div class="statistics" style="background-color: #f0f0f0;">
+  
+    <div class="statistics2" style="background-color: #f0f0f0; height: 800px">
       <h2>Total active terminations</h2>
       <p>{{ statisticsData?.bpi.GBP.rate }} Pfund</p> 
     </div>
-    <div class="statistics" style="background-color: #f0f0f0;">
+
+  
+    <div class="statistics3" style="background-color: #f0f0f0; height: 800px " >
       <h2>Total contracts awaiting signature</h2>
       <p>{{ statisticsData?.bpi.USD.rate }} $</p> 
     </div>
+    
   </div>
   
 </body>
