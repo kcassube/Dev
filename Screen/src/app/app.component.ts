@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
     this.fetchStatistics();
     setInterval(() => {
       this.fetchStatistics(); // Aktualisiere die Daten alle 60 Sekunden
-    }, 6000);
+    }, 60000);
   }
 
   fetchStatistics() {
