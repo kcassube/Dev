@@ -1,0 +1,7 @@
+{
+    "/api/*": {
+        "target": "https://api.coindesk.com/v1/bpi/currentprice.json",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}

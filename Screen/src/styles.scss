@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+$colors: (#fcf8f8, #00ff00, #0000ff); 
+
+@function getRandomColor() {
+  @return nth($colors, random(length($colors)));
+}
+
+.container {
+  display: flex;
+}
+
+.statistics {
+  flex: 1;
+  padding: 20px;
+}
+
+body {
+  background-color: getRandomColor(); // Setze anfängliche Hintergrundfarbe
+  transition: background-color 1s ease; // Füge Übergangseffekt hinzu, um Farbänderungen sanfter zu machen
+}
