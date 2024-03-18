@@ -23,9 +23,9 @@ export class HeaderComponent {
         //this.imageLeftPosition--;
         this.imageLeftPosition-=1;
       }
-      if (this.imageLeftPosition >= 800) { 
+      if (this.imageLeftPosition >= 500) { 
         this.moveRight = false;
-      } else if (this.imageLeftPosition <= 780) {
+      } else if (this.imageLeftPosition <= 680) {
         this.moveRight = true;
       }
       console.log(this.moveRight);
