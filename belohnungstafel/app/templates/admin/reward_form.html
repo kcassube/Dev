@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field, checkbox %}
+{% block title %}{{ 'Belohnung bearbeiten' if reward else 'Neue Belohnung' }}{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>{{ 'Belohnung bearbeiten' if reward else 'Neue Belohnung' }}</h1>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.title) }}
+    {{ field(form.description) }}
+    {{ field(form.icon, 'Zum Beispiel 🍦, 🎬 oder 📺') }}
+    {{ field(form.cost) }}
+    {{ field(form.stock, 'Leer lassen für unbegrenzt verfügbar.') }}
+    {{ checkbox(form.active) }}
+    <p style="margin-top:1.2rem">
+      {{ form.submit(class="btn") }}
+      <a class="btn btn-ghost" href="{{ url_for('admin.rewards') }}">Abbrechen</a>
+    </p>
+  </form>
+</div>
+{% endblock %}

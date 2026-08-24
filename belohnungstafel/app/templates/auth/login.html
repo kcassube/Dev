@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}Anmelden – Belohnungstafel{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>🏆 Belohnungstafel</h1>
+  <p class="hint">Melde dich mit deinem Benutzernamen an.</p>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.username) }}
+    {{ field(form.password) }}
+    <div class="check">{{ form.remember() }} {{ form.remember.label }}</div>
+    <p style="margin-top:1.2rem">{{ form.submit(class="btn") }}</p>
+  </form>
+</div>
+{% endblock %}

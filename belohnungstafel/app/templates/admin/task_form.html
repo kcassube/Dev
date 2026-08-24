@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field, checkbox %}
+{% block title %}{{ 'Aufgabe bearbeiten' if task else 'Neue Aufgabe' }}{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>{{ 'Aufgabe bearbeiten' if task else 'Neue Aufgabe' }}</h1>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.title) }}
+    {{ field(form.description) }}
+    {{ field(form.icon, 'Zum Beispiel 🪥, 🧸 oder 📚') }}
+    {{ field(form.points) }}
+    {{ field(form.recurrence, 'täglich = einmal pro Tag, wöchentlich = einmal pro Woche, einmalig = nur ein einziges Mal.') }}
+    {{ field(form.assignees, 'Nichts auswählen = gilt für alle Kinder. Mehrfachauswahl mit Strg/Cmd.') }}
+    {{ checkbox(form.requires_approval) }}
+    {{ checkbox(form.active) }}
+    <p style="margin-top:1.2rem">
+      {{ form.submit(class="btn") }}
+      <a class="btn btn-ghost" href="{{ url_for('admin.tasks') }}">Abbrechen</a>
+    </p>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}Punkte buchen{% endblock %}
+{% block content %}
+<h1>Punkte buchen</h1>
+
+<div class="stack">
+  <div class="card narrow" style="margin:0">
+    {% if kids %}
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ field(form.child_id) }}
+      {{ field(form.delta, 'Positive Zahl = Bonus, negative Zahl = Abzug.') }}
+      {{ field(form.reason) }}
+      <p style="margin-top:1.2rem">{{ form.submit(class="btn") }}</p>
+    </form>
+    {% else %}
+    <p class="empty">Lege zuerst ein Kinderkonto an.</p>
+    {% endif %}
+  </div>
+
+  <div>
+    <h2>Aktuelle Punktestände</h2>
+    <div class="grid">
+      {% for kid in kids %}
+      <div class="card tile">
+        <div class="icon">{{ kid.avatar }}</div>
+        <div class="title">{{ kid.display_name }}</div>
+        <div class="foot"><span class="pill warn">{{ kid.balance }} ⭐</span></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div>
+    <h2>Letzte Buchungen</h2>
+    <div class="card table-wrap">
+      {% if recent %}
+      <table>
+        <tr><th>Wann</th><th>Kind</th><th>Grund</th><th class="num">Punkte</th></tr>
+        {% for t in recent %}
+        <tr>
+          <td>{{ t.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+          <td>{{ t.child.avatar }} {{ t.child.display_name }}</td>
+          <td>{{ t.reason }}</td>
+          <td class="num {{ 'pos' if t.delta > 0 else 'neg' }}">{{ '%+d' % t.delta }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}<p class="empty">Noch keine Buchungen.</p>{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

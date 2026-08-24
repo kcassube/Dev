@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_pill %}
+{% block title %}Meine Tafel{% endblock %}
+{% block content %}
+<div class="row-between">
+  <h1>Hallo {{ current_user.display_name }} {{ current_user.avatar }}</h1>
+  <span class="badge-points">{{ balance }} Punkte ⭐</span>
+</div>
+
+<h2>Meine Aufgaben</h2>
+{% if board %}
+<div class="grid">
+  {% for item in board %}
+  <div class="card tile {{ 'done' if not item.open }}">
+    <div class="icon">{{ item.task.icon }}</div>
+    <div class="title">{{ item.task.title }}</div>
+    {% if item.task.description %}<div class="desc">{{ item.task.description }}</div>{% endif %}
+    <div class="foot">
+      <span class="pill">+{{ item.task.points }} ⭐</span>
+      <span class="pill muted">{{ item.task.recurrence_label }}</span>
+    </div>
+    {% if item.open %}
+      <form method="post" action="{{ url_for('kid.complete_task', task_id=item.task.id) }}">
+        {{ form.hidden_tag() }}
+        <button class="btn-ok" type="submit">Erledigt!</button>
+      </form>
+    {% else %}
+      <button type="button" disabled>Schon erledigt ✓</button>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">Für dich sind gerade keine Aufgaben eingetragen.</p>
+{% endif %}
+
+{% if pending %}
+<h2>Wartet auf Bestätigung</h2>
+<div class="card table-wrap">
+  <table>
+    <tr><th>Aufgabe</th><th>Eingereicht</th><th class="num">Punkte</th><th>Status</th></tr>
+    {% for c in pending %}
+    <tr>
+      <td>{{ c.task.icon }} {{ c.task.title }}</td>
+      <td>{{ c.submitted_at.strftime('%d.%m.%Y %H:%M') }}</td>
+      <td class="num">{{ c.points }}</td>
+      <td>{{ status_pill(c.status) }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+{% if recent %}
+<h2>Zuletzt passiert</h2>
+<div class="card table-wrap">
+  <table>
+    {% for t in recent %}
+    <tr>
+      <td>{{ t.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+      <td>{{ t.reason }}</td>
+      <td class="num {{ 'pos' if t.delta > 0 else 'neg' }}">{{ '%+d' % t.delta }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}

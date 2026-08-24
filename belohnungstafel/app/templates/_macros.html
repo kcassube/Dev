@@ -1,0 +1,17 @@
+{% macro field(f, hint='') %}
+  {{ f.label }}
+  {{ f() }}
+  {% if hint %}<p class="hint">{{ hint }}</p>{% endif %}
+  {% for error in f.errors %}<p class="error">{{ error }}</p>{% endfor %}
+{% endmacro %}
+
+{% macro checkbox(f) %}
+  <div class="check">{{ f() }} {{ f.label }}</div>
+  {% for error in f.errors %}<p class="error">{{ error }}</p>{% endfor %}
+{% endmacro %}
+
+{% macro status_pill(status) %}
+  {% if status == 'approved' %}<span class="pill ok">bestätigt</span>
+  {% elif status == 'pending' %}<span class="pill warn">wartet</span>
+  {% else %}<span class="pill bad">abgelehnt</span>{% endif %}
+{% endmacro %}

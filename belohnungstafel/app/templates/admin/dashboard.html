@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Übersicht – Verwaltung{% endblock %}
+{% block content %}
+<h1>Übersicht</h1>
+
+<div class="card">
+  <div class="stats">
+    <div class="stat"><div class="value">{{ open_tasks }}</div><div class="label">Aufgaben zur Freigabe</div></div>
+    <div class="stat"><div class="value">{{ open_rewards }}</div><div class="label">Wünsche zur Freigabe</div></div>
+    <div class="stat"><div class="value">{{ task_count }}</div><div class="label">aktive Aufgaben</div></div>
+    <div class="stat"><div class="value">{{ reward_count }}</div><div class="label">Belohnungen im Shop</div></div>
+  </div>
+  {% if open_tasks or open_rewards %}
+  <p style="margin-top:1rem"><a class="btn" href="{{ url_for('admin.approvals') }}">Jetzt freigeben</a></p>
+  {% endif %}
+</div>
+
+<h2>Kinder</h2>
+{% if kids %}
+<div class="grid">
+  {% for kid in kids %}
+  <div class="card tile">
+    <div class="icon">{{ kid.avatar }}</div>
+    <div class="title">{{ kid.display_name }}</div>
+    <div class="desc">@{{ kid.username }}{% if not kid.enabled %} · gesperrt{% endif %}</div>
+    <div class="foot"><span class="pill warn">{{ kid.balance }} ⭐</span></div>
+    <div class="actions">
+      <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.child_detail', child_id=kid.id) }}">Konto ansehen</a>
+      <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.user_edit', user_id=kid.id) }}">Bearbeiten</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">Noch keine Kinderkonten. <a href="{{ url_for('admin.user_create') }}">Jetzt eines anlegen</a>.</p>
+{% endif %}
+{% endblock %}

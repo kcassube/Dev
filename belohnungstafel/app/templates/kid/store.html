@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_pill %}
+{% block title %}Belohnungs-Shop{% endblock %}
+{% block content %}
+<div class="row-between">
+  <h1>🛍️ Belohnungs-Shop</h1>
+  <span class="badge-points">{{ balance }} Punkte ⭐</span>
+</div>
+
+{% if rewards %}
+<div class="grid">
+  {% for reward in rewards %}
+  {% set affordable = balance >= reward.cost and reward.in_stock %}
+  <div class="card tile {{ '' if affordable else 'done' }}">
+    <div class="icon">{{ reward.icon }}</div>
+    <div class="title">{{ reward.title }}</div>
+    {% if reward.description %}<div class="desc">{{ reward.description }}</div>{% endif %}
+    <div class="foot">
+      <span class="pill warn">{{ reward.cost }} ⭐</span>
+      {% if reward.stock is not none %}<span class="pill muted">noch {{ reward.stock }}</span>{% endif %}
+    </div>
+    {% if affordable %}
+      <form method="post" action="{{ url_for('kid.redeem', reward_id=reward.id) }}">
+        {{ form.hidden_tag() }}
+        <button type="submit">Einlösen</button>
+      </form>
+    {% elif not reward.in_stock %}
+      <button type="button" disabled>Ausverkauft</button>
+    {% else %}
+      <button type="button" disabled>Noch {{ reward.cost - balance }} ⭐ sammeln</button>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">Im Shop ist gerade nichts eingetragen.</p>
+{% endif %}
+
+{% if open_redemptions %}
+<h2>Deine offenen Wünsche</h2>
+<div class="card table-wrap">
+  <table>
+    <tr><th>Belohnung</th><th>Angefragt</th><th class="num">Kosten</th><th>Status</th></tr>
+    {% for r in open_redemptions %}
+    <tr>
+      <td>{{ r.reward.icon }} {{ r.reward.title }}</td>
+      <td>{{ r.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+      <td class="num">{{ r.cost }}</td>
+      <td>{{ status_pill(r.status) }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}

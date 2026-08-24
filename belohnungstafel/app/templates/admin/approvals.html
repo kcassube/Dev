@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Freigaben{% endblock %}
+{% block content %}
+<h1>Freigaben</h1>
+
+<h2>Erledigte Aufgaben</h2>
+<div class="card table-wrap">
+  {% if completions %}
+  <table>
+    <tr><th>Kind</th><th>Aufgabe</th><th>Eingereicht</th><th class="num">Punkte</th><th>Aktion</th></tr>
+    {% for c in completions %}
+    <tr>
+      <td>{{ c.child.avatar }} {{ c.child.display_name }}</td>
+      <td>{{ c.task.icon }} {{ c.task.title }}</td>
+      <td>{{ c.submitted_at.strftime('%d.%m.%Y %H:%M') }}</td>
+      <td class="num">{{ c.points }}</td>
+      <td class="actions">
+        <form class="inline" method="post" action="{{ url_for('admin.decide_completion', completion_id=c.id, decision='ok') }}">
+          {{ form.hidden_tag() }}<button class="btn-ok btn-sm" type="submit">Bestätigen</button>
+        </form>
+        <form class="inline" method="post" action="{{ url_for('admin.decide_completion', completion_id=c.id, decision='nein') }}">
+          {{ form.hidden_tag() }}<button class="btn-bad btn-sm" type="submit">Ablehnen</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="empty">Nichts offen – alles bestätigt.</p>{% endif %}
+</div>
+
+<h2>Belohnungswünsche</h2>
+<div class="card table-wrap">
+  {% if redemptions %}
+  <table>
+    <tr><th>Kind</th><th>Belohnung</th><th>Angefragt</th><th class="num">Kosten</th><th>Aktion</th></tr>
+    {% for r in redemptions %}
+    <tr>
+      <td>{{ r.child.avatar }} {{ r.child.display_name }}</td>
+      <td>{{ r.reward.icon }} {{ r.reward.title }}</td>
+      <td>{{ r.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+      <td class="num">{{ r.cost }}</td>
+      <td class="actions">
+        <form class="inline" method="post" action="{{ url_for('admin.decide_redemption', redemption_id=r.id, decision='ok') }}">
+          {{ form.hidden_tag() }}<button class="btn-ok btn-sm" type="submit">Freigeben</button>
+        </form>
+        <form class="inline" method="post" action="{{ url_for('admin.decide_redemption', redemption_id=r.id, decision='nein') }}">
+          {{ form.hidden_tag() }}<button class="btn-bad btn-sm" type="submit">Ablehnen</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="empty">Keine offenen Wünsche.</p>{% endif %}
+</div>
+<p class="hint">Beim Ablehnen eines Wunsches werden die Punkte automatisch zurückgebucht.</p>
+{% endblock %}

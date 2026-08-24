@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field, checkbox %}
+{% block title %}{{ 'Konto bearbeiten' if user else 'Neues Konto' }}{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>{{ 'Konto bearbeiten' if user else 'Neues Konto' }}</h1>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.username, 'Wird kleingeschrieben gespeichert.') }}
+    {{ field(form.display_name) }}
+    {{ field(form.avatar, 'Zum Beispiel 🦊, 🐰 oder 🚀') }}
+    {{ field(form.role) }}
+    {{ field(form.password, 'Beim Bearbeiten leer lassen, um das Passwort zu behalten. Mindestens 4 Zeichen.') }}
+    {{ field(form.confirm) }}
+    {{ checkbox(form.enabled) }}
+    <p style="margin-top:1.2rem">
+      {{ form.submit(class="btn") }}
+      <a class="btn btn-ghost" href="{{ url_for('admin.users') }}">Abbrechen</a>
+    </p>
+  </form>
+</div>
+{% endblock %}

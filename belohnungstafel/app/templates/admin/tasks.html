@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Aufgaben{% endblock %}
+{% block content %}
+<div class="row-between">
+  <h1>Aufgaben</h1>
+  <a class="btn" href="{{ url_for('admin.task_create') }}">+ Neue Aufgabe</a>
+</div>
+
+<div class="card table-wrap">
+  {% if tasks %}
+  <table>
+    <tr><th>Aufgabe</th><th class="num">Punkte</th><th>Wiederholung</th><th>Für</th><th>Freigabe</th><th>Status</th><th>Aktion</th></tr>
+    {% for task in tasks %}
+    <tr>
+      <td>{{ task.icon }} {{ task.title }}</td>
+      <td class="num">{{ task.points }}</td>
+      <td>{{ task.recurrence_label }}</td>
+      <td>{% if task.assignees %}{% for c in task.assignees %}{{ c.avatar }} {{ c.display_name }}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}alle Kinder{% endif %}</td>
+      <td>{% if task.requires_approval %}<span class="pill">nötig</span>{% else %}<span class="pill ok">automatisch</span>{% endif %}</td>
+      <td>{% if task.active %}<span class="pill ok">aktiv</span>{% else %}<span class="pill muted">inaktiv</span>{% endif %}</td>
+      <td class="actions">
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.task_edit', task_id=task.id) }}">Bearbeiten</a>
+        <form class="inline" method="post" action="{{ url_for('admin.task_delete', task_id=task.id) }}"
+              onsubmit="return confirm('Aufgabe „{{ task.title }}“ löschen? Der Verlauf dazu verschwindet ebenfalls.');">
+          {{ form.hidden_tag() }}<button class="btn-bad btn-sm" type="submit">Löschen</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="empty">Noch keine Aufgaben angelegt.</p>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Konten{% endblock %}
+{% block content %}
+<div class="row-between">
+  <h1>Konten</h1>
+  <a class="btn" href="{{ url_for('admin.user_create') }}">+ Neues Konto</a>
+</div>
+
+<h2>Kinder</h2>
+<div class="card table-wrap">
+  {% if kids %}
+  <table>
+    <tr><th>Name</th><th>Benutzername</th><th class="num">Punkte</th><th>Status</th><th>Aktion</th></tr>
+    {% for kid in kids %}
+    <tr>
+      <td>{{ kid.avatar }} {{ kid.display_name }}</td>
+      <td>@{{ kid.username }}</td>
+      <td class="num">{{ kid.balance }}</td>
+      <td>{% if kid.enabled %}<span class="pill ok">aktiv</span>{% else %}<span class="pill bad">gesperrt</span>{% endif %}</td>
+      <td class="actions">
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.child_detail', child_id=kid.id) }}">Konto</a>
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.user_edit', user_id=kid.id) }}">Bearbeiten</a>
+        <form class="inline" method="post" action="{{ url_for('admin.user_delete', user_id=kid.id) }}"
+              onsubmit="return confirm('Konto {{ kid.display_name }} mit allen Punkten löschen?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn-bad btn-sm" type="submit">Löschen</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="empty">Noch keine Kinderkonten.</p>{% endif %}
+</div>
+
+<h2>Eltern</h2>
+<div class="card table-wrap">
+  <table>
+    <tr><th>Name</th><th>Benutzername</th><th>Status</th><th>Aktion</th></tr>
+    {% for p in grownups %}
+    <tr>
+      <td>{{ p.avatar }} {{ p.display_name }}{% if p.id == current_user.id %} <span class="pill">du</span>{% endif %}</td>
+      <td>@{{ p.username }}</td>
+      <td>{% if p.enabled %}<span class="pill ok">aktiv</span>{% else %}<span class="pill bad">gesperrt</span>{% endif %}</td>
+      <td class="actions">
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.user_edit', user_id=p.id) }}">Bearbeiten</a>
+        {% if p.id != current_user.id %}
+        <form class="inline" method="post" action="{{ url_for('admin.user_delete', user_id=p.id) }}"
+              onsubmit="return confirm('Elternkonto {{ p.display_name }} löschen?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn-bad btn-sm" type="submit">Löschen</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

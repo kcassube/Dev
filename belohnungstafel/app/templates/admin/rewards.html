@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Belohnungen{% endblock %}
+{% block content %}
+<div class="row-between">
+  <h1>Belohnungen</h1>
+  <a class="btn" href="{{ url_for('admin.reward_create') }}">+ Neue Belohnung</a>
+</div>
+
+<div class="card table-wrap">
+  {% if rewards %}
+  <table>
+    <tr><th>Belohnung</th><th class="num">Kosten</th><th>Verfügbar</th><th>Status</th><th>Aktion</th></tr>
+    {% for reward in rewards %}
+    <tr>
+      <td>{{ reward.icon }} {{ reward.title }}{% if reward.description %}<div class="hint">{{ reward.description }}</div>{% endif %}</td>
+      <td class="num">{{ reward.cost }}</td>
+      <td>{% if reward.stock is none %}unbegrenzt{% else %}{{ reward.stock }}{% endif %}</td>
+      <td>{% if reward.active %}<span class="pill ok">im Shop</span>{% else %}<span class="pill muted">versteckt</span>{% endif %}</td>
+      <td class="actions">
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.reward_edit', reward_id=reward.id) }}">Bearbeiten</a>
+        <form class="inline" method="post" action="{{ url_for('admin.reward_delete', reward_id=reward.id) }}"
+              onsubmit="return confirm('Belohnung „{{ reward.title }}“ löschen?');">
+          {{ form.hidden_tag() }}<button class="btn-bad btn-sm" type="submit">Löschen</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="empty">Noch keine Belohnungen angelegt.</p>{% endif %}
+</div>
+{% endblock %}

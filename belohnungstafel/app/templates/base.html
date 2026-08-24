@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Belohnungstafel{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+{% if current_user.is_authenticated %}
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="{{ url_for('admin.dashboard') if current_user.is_parent else url_for('kid.dashboard') }}">🏆 Belohnungstafel</a>
+    <nav class="menu">
+      {% if current_user.is_parent %}
+        <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}">Übersicht</a>
+        <a href="{{ url_for('admin.approvals') }}" class="{{ 'active' if request.endpoint == 'admin.approvals' }}">Freigaben</a>
+        <a href="{{ url_for('admin.tasks') }}" class="{{ 'active' if request.endpoint.startswith('admin.task') }}">Aufgaben</a>
+        <a href="{{ url_for('admin.rewards') }}" class="{{ 'active' if request.endpoint.startswith('admin.reward') }}">Belohnungen</a>
+        <a href="{{ url_for('admin.users') }}" class="{{ 'active' if request.endpoint.startswith('admin.user') }}">Konten</a>
+        <a href="{{ url_for('admin.points') }}" class="{{ 'active' if request.endpoint == 'admin.points' }}">Punkte</a>
+      {% else %}
+        <a href="{{ url_for('kid.dashboard') }}" class="{{ 'active' if request.endpoint == 'kid.dashboard' }}">Meine Tafel</a>
+        <a href="{{ url_for('kid.store') }}" class="{{ 'active' if request.endpoint == 'kid.store' }}">Shop</a>
+        <a href="{{ url_for('kid.history') }}" class="{{ 'active' if request.endpoint == 'kid.history' }}">Verlauf</a>
+        <span class="badge-points">{{ current_user.balance }} ⭐</span>
+      {% endif %}
+      <a href="{{ url_for('auth.change_password') }}">{{ current_user.avatar }} {{ current_user.display_name }}</a>
+      <a href="{{ url_for('auth.logout') }}">Abmelden</a>
+    </nav>
+  </div>
+</header>
+{% endif %}
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flashes">
+        {% for category, message in messages %}<li class="{{ category }}">{{ message }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>
